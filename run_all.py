@@ -32,6 +32,10 @@ def make_command(model_name_or_path, task_name, output_dir):
 def main(args):
     if args.tasks.lower() == 'all':
         tasks = ['cola', 'mnli', 'mrpc', 'qnli', 'qqp', 'rte', 'sst2', 'stsb', 'wnli']
+    
+    elif args.tasks.lower() == 'fast':
+        tasks = ['cola', 'mrpc', 'rte', 'stsb', 'wnli']
+    
     else:
         tasks = [t.lower() for t in args.tasks.split(',')]
 
