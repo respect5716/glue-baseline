@@ -33,6 +33,7 @@ class Lite(LightningLite):
 
         num_training_steps = len(train_loader) * config.num_epochs
         model, optimizer, scheduler = prepare_model(config, num_training_steps)
+        _ = self.setup(model, optimizer)
         metric, metric_key = prepare_metric(config.task)
 
         if self.is_global_zero and not config.debug:
@@ -43,7 +44,13 @@ class Lite(LightningLite):
         for ep in range(config.num_epochs):
             loss = train_epoch(model, optimizer, scheduler, train_loader, show_pbar=self.is_global_zero)
             logits, preds, labels = predict_epoch(model, valid_loader)
-            res = metric.compute(predictions=preds.numpy(), references=labels.numpy())
+
+            if config.task in ['stsb']:
+                # regression
+                res = metric.compute(predictions=logits.squeeze().numpy(), references=labels.numpy())
+            else:
+                # classification
+                res = metric.compute(predictions=preds.numpy(), references=labels.numpy())
             log = {'ep': ep, 'loss': loss, **res}
             logs.append(log)
                 
@@ -59,7 +66,7 @@ class Lite(LightningLite):
 
             if self.is_global_zero:
                 wandb.log(log)
-                pbar.set_postfix(log)
+                print(log)
 
         if self.is_global_zero:
             for k, v in best_log.items():
@@ -68,9 +75,8 @@ class Lite(LightningLite):
                 json.dump(logs, f)
             with open(os.path.join(config.save_dir, 'best.json'), 'w') as f:
                 json.dump(best_log, f)
-
-
-
+            if not config.debug:
+                wandb.finish()
 
 
 @hydra.main(config_path='.', config_name='config')

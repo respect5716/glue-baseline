@@ -1,5 +1,5 @@
 # base
-debug: true
+debug: false
 task: mrpc
 working_dir: ${hydra:runtime.cwd}
 # model_name_or_path: nreimers/MiniLMv2-L6-H384-distilled-from-BERT-Base
