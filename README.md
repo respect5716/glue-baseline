@@ -1,21 +1,9 @@
 # glue-benchmark
 
-This code is based on [huggingface](https://github.com/huggingface/transformers/tree/master/examples/pytorch/text-classification).
-
 
 ## Run
 
 ```bash
-export TASK_NAME=mrpc
-
-python run_glue.py \
-  --model_name_or_path bert-base-cased \
-  --task_name $TASK_NAME \
-  --do_train \
-  --do_eval \
-  --max_seq_length 128 \
-  --per_device_train_batch_size 32 \
-  --learning_rate 2e-5 \
-  --num_train_epochs 3 \
-  --output_dir /tmp/$TASK_NAME/
+python run_glue.py -m num_epochs=1,2
+python run_glue.py -m task=mrpc,rte num_epochs=3,5 lr=3e-5,5e-5,9e-5 debug=false
 ```

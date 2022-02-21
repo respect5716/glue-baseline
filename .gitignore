@@ -1,3 +1,5 @@
 outputs
-bert-base-uncased*
-glue_output
+multirun
+glue_outputs
+models
+__pycache__

@@ -1,12 +1,28 @@
+# base
+debug: true
+task: mrpc
+working_dir: ${hydra:runtime.cwd}
+# model_name_or_path: nreimers/MiniLMv2-L6-H384-distilled-from-BERT-Base
+model_name_or_path: transformers
+save_dir: ${working_dir}/glue_outputs/${task}
 
-data:
-  task_name: ''
-  max_seq_length: 128
-  pad_to_max_length: true
+# data
+max_length: 128
+batch_size: 32
 
+# optim
+lr: 5e-5
+weight_decay: 1e-2
 
-model_name_or_path: 'distilbert-base-uncased'
+# scheduler
+scheduler: linear
+warmup_ratio: 0.05
 
+# train
+num_epochs: 3
 
-trainer:
-  seed: 42
+# pytorch lightning lite
+lite:
+  gpus: -1
+  strategy: ddp
+  precision: 32
